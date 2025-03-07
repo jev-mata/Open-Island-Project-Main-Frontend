@@ -12,5 +12,18 @@ export interface Destination {
     thumbnail: string;
     tags: string[];
 }
+export interface TagsDestination {
+    id: number;
+    Name: string;
+    Image_URL: string; 
+}
+export type UserData ={
+    id: number;
+    fname: string;
+    lname: string;
+    email: string; 
+}
+
+export type Serverinty="error"|"warning"|"success"|"info";
 export const categoriesOptions = ["Cultural and Heritage Tourism", "Nature and Eco-tourism", "Adventure Tourism", "Gastronomy", "Recreational Tourism", "Religious and Spiritual Tourism", "Accommodation"];
 export const tagsOptions = ["Adventure tourism", "Recreational tourism", "Religious and spiritual tourism", "Nature and eco-tourism", "Local activities", "Wildlife encounters", "Foodie adventure", "Hidden gems", "Luxury stays", "Short-Term Rental", "Residential accommodations"];

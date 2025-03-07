@@ -29,6 +29,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         fontSize: '2rem',                          // Optional: Adjust font size (for visibility)
         textAlign: 'center',
         width: '100%',
+        margin:'0',
+        padding:'0'
       }}>
           {children}
       </body>

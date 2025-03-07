@@ -1,5 +1,5 @@
 'use client'
-import { Box, Button, Card, CardContent, CardHeader, FormControl, Grid2, InputLabel, Select, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, CardHeader, FormControl, Grid2, InputLabel, Select, Skeleton, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Destination, Pages, QnA } from "../type";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -13,6 +13,7 @@ function RecommendationPage({ page, setPage, settargetPage, setSelected }: { pag
     const [recommendations, setRecommendations] = useState<Destination[]>([]);
     const [isFetch, setFetch] = useState<boolean>(false);
     const hasFetched = useRef(false);
+    const [isLoading, setLoading] = useState<boolean>(false);
 
     const handleSelect = (destination: Destination) => {
         // console.log("clicked");
@@ -34,12 +35,14 @@ function RecommendationPage({ page, setPage, settargetPage, setSelected }: { pag
         setPage('Loading');
         settargetPage('Save');
         setSelected(selectedIsland);
+        
     }
     const theme = useTheme(); // ✅ Use the theme provided by RootLayout
 
 
     const fetchRecommendations = useCallback(async () => {
         const sessionId = Cookies.get("session_id");
+        setLoading(true);
 
         if (!sessionId) {
             // console.error("No session ID found");
@@ -52,6 +55,7 @@ function RecommendationPage({ page, setPage, settargetPage, setSelected }: { pag
             const response = await Axios_Open.get<Destination[]>(`/api/recommendations/${sessionId}`);
             setRecommendations(response.data);
             setFetch(false);
+            setLoading(false);
 
         } catch (error) {
             console.error("Error fetching recommendations:", error);
@@ -111,6 +115,39 @@ function RecommendationPage({ page, setPage, settargetPage, setSelected }: { pag
                     width: '90%', mx: 'auto', mt: 5
                 }}>
                     <Grid2 container spacing={1} >
+                        {isLoading ?
+                            <Box sx={{ width: '100%' }}>
+
+                                <Grid2 container spacing={1} >
+                                    <Grid2 size={3}>
+                                        <Skeleton animation="wave" sx={{
+                                            width: '100%',
+                                            height: "180px",
+                                        }}></Skeleton>
+                                    </Grid2>
+                                    <Grid2 size={3}>
+                                        <Skeleton animation="wave" sx={{
+                                            width: '100%',
+                                            height: "180px",
+                                        }}></Skeleton>
+                                    </Grid2>
+                                    <Grid2 size={3}>
+                                        <Skeleton animation="wave" sx={{
+                                            width: '100%',
+                                            height: "180px",
+                                        }}></Skeleton>
+                                    </Grid2>
+                                    <Grid2 size={3}>
+                                        <Skeleton animation="wave" sx={{
+                                            width: '100%',
+                                            height: "180px",
+                                        }}></Skeleton>
+                                    </Grid2>
+                                </Grid2>
+                            </Box>
+                            :
+                            ''
+                        }
                         {recommendations.map((destination, index) => (
                             <Grid2 key={index} size={2.4} >
                                 <Box
@@ -131,10 +168,11 @@ function RecommendationPage({ page, setPage, settargetPage, setSelected }: { pag
                                         handleSelect(destination)
                                     }}
                                 >
-                                    <Box component={'img'}
-                                        src={destination.thumbnail}
-                                        alt={`image-${index}`}
+                                    <Box
                                         sx={{
+                                            backgroundImage: `url('${destination.thumbnail}')`,
+                                            backgroundPosition: 'center',
+                                            backgroundSize: '100% auto',
                                             width: "100%",
                                             height: "120px",
                                             borderRadius: 5,
@@ -180,8 +218,9 @@ function RecommendationPage({ page, setPage, settargetPage, setSelected }: { pag
                     </Grid2>
                     <Button
                         onClick={onClickSave}
+                        disabled={selectedIsland.length==0}
                         sx={{
-                            bgcolor: theme.palette.button1.main,
+                            bgcolor: selectedIsland.length==0?theme.palette.action.disabled:theme.palette.button1.main,
                             color: theme.palette.white_text.main,
                             borderRadius: 10,
                             minWidth: 200,

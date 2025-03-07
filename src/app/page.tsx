@@ -1,6 +1,6 @@
 'use client'
 import { useState, useMemo, useEffect } from "react";
-import { Destination, Pages } from "./type";
+import { Destination, Pages, UserData } from "./type";
 import LandingPage from "./components/LandingPage";
 import QuestionPage from "./components/QuestionPage";
 import LoadingPage from "./components/LoadingPage";
@@ -15,6 +15,10 @@ import Tooltip from '@mui/material/Tooltip';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline, PaletteMode } from "@mui/material";
 import logo from "../Images/logo.png";
+import Login from "./components/Login";
+import Signup from "./components/Signin";
+import Axios_Open from "./lib/Axios_Open";
+import { useRouter } from "next/navigation";
 declare module "@mui/material/styles" {
   interface Palette {
     header: Palette["primary"];
@@ -42,8 +46,37 @@ function page() {
 
   const [selectedIsland, SetSelectedIsland] = useState<Destination[]>([]);
   const [mode, setMode] = useState<PaletteMode>(() => "light"); // Use a function to ensure consistent initial state
+  const [user, setUser] = useState<UserData | null>();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const router = useRouter();
+  useEffect(() => {
+    const checkLogin = async () => {
+      try {
+        const response = await Axios_Open.get("/api/checkAuth", {
+          withCredentials: true, // ✅ Important for Laravel Sanctum or session-based auth
+        });
 
+        if (response.data.authenticated && response.data.user) {
+          setUser(response.data.user);
+          setIsAuthenticated(true);
+        } else {
+          setUser(null);
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        console.error("Error checking login:", error);
+        setIsAuthenticated(false);
+        setUser(null);
+      }
+    };
 
+    checkLogin();
+  }, []);
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/dashboard");
+    }
+  }, [isAuthenticated]);
   const theme = useMemo(
     () =>
       createTheme({
@@ -89,10 +122,14 @@ function page() {
   );
 
   const [hover, setHover] = useState(false);
+  const [signin, setSignin] = useState(false);
+  const [login, setLogin] = useState(false);
   const toggleDarkMode = () => {
     setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
   };
-
+  const ToggleLogin = () => {
+    setLogin(!login);
+  }
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
     if (!hydrated) {
@@ -152,7 +189,7 @@ function page() {
                         borderWidth: 3,
                       },
                     }}
-                    onClick={toggleDarkMode}
+                    onClick={() => { setLogin(true); setSignin(false) }}
                   >Login</Button>
                 </Tooltip>
                 <Tooltip title="SignUp">
@@ -160,6 +197,7 @@ function page() {
                   <Button variant={hover ? 'outlined' : 'contained'}
                     onMouseEnter={() => { setHover(false) }}
                     onMouseLeave={() => { setHover(false) }}
+                    onClick={() => { setLogin(false); setSignin(true) }}
                     sx={{
                       mx: 2, mr: 4,
                       borderRadius: 10,
@@ -185,18 +223,20 @@ function page() {
         {currentPage == 'Landing' ?
           <LandingPage page={currentPage} setPage={setCurrentPage}></LandingPage>
           : currentPage == 'Question' ?
-            <QuestionPage  setPage={setCurrentPage} settargetPage={settargetPage}></QuestionPage>
+            <QuestionPage setPage={setCurrentPage} settargetPage={settargetPage}></QuestionPage>
             : currentPage == 'Loading' ?
               <LoadingPage setPage={setCurrentPage} targetPage={targetPage}></LoadingPage>
               : currentPage == 'Recommendation' ?
                 <RecommendationPage page={currentPage} setPage={setCurrentPage} settargetPage={settargetPage} setSelected={SetSelectedIsland}></RecommendationPage>
                 : currentPage == 'Save' ?
-                  <SaveIsland selectedIsland={selectedIsland}></SaveIsland>
+                  <SaveIsland selectedIsland={selectedIsland} setLogin={setLogin} setSignin={setSignin}></SaveIsland>
                   : ""
         }
-
+        {signin && <Signup selectedIsland={selectedIsland} setLogin={setLogin} setSignin={setSignin}></Signup>}
+        {login && <Login selectedIsland={selectedIsland} setLogin={setLogin} setSignin={setSignin}></Login>}
       </ThemeProvider>
     </>
   );
 }
+
 export default page;
