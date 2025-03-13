@@ -7,10 +7,7 @@ import Axios_Open from "../lib/Axios_Open";
 import Cookies from "js-cookie"; 
 export default function SaveIsland({ selectedIsland,setSignin }: { selectedIsland: Destination[],  setSignin: (setSignin: boolean) => void }) {
     const [Tags, setTags] = useState<TagsDestination[]>([]);
-    const getUniqueTags = (): string[] => {
-        const allTags = selectedIsland.flatMap(island => island.tags);
-        return Array.from(new Set(allTags)); // Remove duplicates
-    }; 
+
 
     const positions = [
         { name: "top", zIndex: 2 },
@@ -21,7 +18,10 @@ export default function SaveIsland({ selectedIsland,setSignin }: { selectedIslan
     ];
 
     useEffect(() => {
- 
+        const getUniqueTags = (): string[] => {
+            const allTags = selectedIsland.flatMap(island => island.tags);
+            return Array.from(new Set(allTags)); // Remove duplicates
+        }; 
         const getTag = async () => {
             const allCookies = Cookies.get();
             const uniqueTags = getUniqueTags(); // Get unique tags
@@ -45,7 +45,7 @@ export default function SaveIsland({ selectedIsland,setSignin }: { selectedIslan
     
         }
         getTag();
-    }, [getUniqueTags])
+    }, [])
     const theme = useTheme(); // ✅ Use the theme provided by RootLayout
     return (
         <Box sx={{
