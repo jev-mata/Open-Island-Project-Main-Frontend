@@ -52,13 +52,14 @@ function page() {
   useEffect(() => {
     const checkLogin = async () => {
       try {
-        const response = await Axios_Open.get("/api/checkAuth", {
+        const response = await Axios_Open.get("/api/www/checkAuth", {
           withCredentials: true, // ✅ Important for Laravel Sanctum or session-based auth
         });
 
         if (response.data.authenticated && response.data.user) {
           setUser(response.data.user);
           setIsAuthenticated(true);
+          router.push('/dashboard');
         } else {
           setUser(null);
           setIsAuthenticated(false);

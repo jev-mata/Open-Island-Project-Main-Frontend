@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import { useTheme } from "@mui/material/styles";
 import { useState } from "react";
 import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 interface ErrorResponse {
     message?: string; // Message may or may not exist
 }
@@ -15,13 +16,14 @@ export default function Login({ selectedIsland, setLogin, setSignin }: { selecte
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const theme = useTheme(); // ✅ Use the theme provided by RootLayout
+    const router = useRouter();
     const handleRegister = async (event: React.FormEvent) => {
         event.preventDefault(); // ⛔ Prevents page refresh
 
 
         const allCookies = Cookies.get();
         try {
-            const response = await Axios_Open.post("/api/login", {
+            const response = await Axios_Open.post("/api/www/login", {
                 email,
                 password,
             }, {
@@ -38,10 +40,11 @@ export default function Login({ selectedIsland, setLogin, setSignin }: { selecte
                 setOpen(true);
                 setMSG_res("Login successful!");
                 setResultType('success');
+                router.push('/dashboard');
                 // Redirect to login or dashboard here
             } else {
                 setOpen(true);
-                setMSG_res("Login failed. Check your inputs.");
+                setMSG_res("Invalid Credentials");
                 setResultType('error');
             }
 
@@ -59,7 +62,7 @@ export default function Login({ selectedIsland, setLogin, setSignin }: { selecte
             console.error("Error registering:", error);
         }
     };
-    const [open, setOpen] = useState<boolean>(true);
+    const [open, setOpen] = useState<boolean>(false);
     const [msgRes, setMSG_res] = useState<string>('');
     const [resultType, setResultType] = useState<Serverinty>('info');
 
@@ -190,7 +193,7 @@ export default function Login({ selectedIsland, setLogin, setSignin }: { selecte
                             padding: 1, // Optional: Adds some padding for spacing 
                         }}>
                             <Typography sx={{ fontSize: 'small' }}>Don’t have an account?</Typography>
-                            <Button variant="text" sx={{ fontSize: 'small', }}>Signup</Button>
+                            <Button variant="text" sx={{ fontSize: 'small', }} onClick={(event) => { event.stopPropagation(); setSignin(true); setLogin(false); }}>Signup</Button>
                         </Box>
 
                     </Box>

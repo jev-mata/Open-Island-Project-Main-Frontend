@@ -7,6 +7,7 @@ import "@fontsource/inter/500.css"; // Medium
 import "@fontsource/inter/700.css"; // Bold
 
 import { ReactNode } from "react";
+import '@/app/css/main.css';
 import landingPageIMG from "../Images/landingpageBG.png";
 export default function RootLayout({ children }: { children: ReactNode }) {
 
@@ -21,8 +22,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         backgroundPositionY: '34%',              // Align the image to the center
         backgroundPositionX: 'center',              // Align the image to the center
         backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed',
-        height: '100vh',                            // Add Flexbox to center content (optional)
+        backgroundAttachment: 'fixed', 
         justifyContent: 'center',                  // Center horizontally
         alignItems: 'center',                      // Center vertically
         color: 'black',                            // Change text color to white (optional, depends on background image)

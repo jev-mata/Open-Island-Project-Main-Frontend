@@ -26,8 +26,8 @@ export default function Signin({ selectedIsland, setLogin, setSignin }: { select
 
         const allCookies = Cookies.get();
         try {
-            if (selectedIsland.length!=0) {
-                const response = await Axios_Open.post("/api/register/with/island", {
+            if (selectedIsland.length != 0) {
+                const response = await Axios_Open.post("/api/www/register/with/island", {
                     fname,
                     lname,
                     email,
@@ -56,7 +56,7 @@ export default function Signin({ selectedIsland, setLogin, setSignin }: { select
                 }
             } else {
 
-                const response = await Axios_Open.post("/api/register", {
+                const response = await Axios_Open.post("/api/www/register", {
                     fname,
                     lname,
                     email,
@@ -98,7 +98,7 @@ export default function Signin({ selectedIsland, setLogin, setSignin }: { select
             console.error("Error registering:", error);
         }
     };
-    const [open, setOpen] = useState<boolean>(true);
+    const [open, setOpen] = useState<boolean>(false);
     const [msgRes, setMSG_res] = useState<string>('');
     const [resultType, setResultType] = useState<Serverinty>('info');
 
@@ -267,7 +267,7 @@ export default function Signin({ selectedIsland, setLogin, setSignin }: { select
                             padding: 1, // Optional: Adds some padding for spacing 
                         }}>
                             <Typography sx={{ fontSize: 'small' }}>Already have an account? </Typography>
-                            <Button variant="text" sx={{ fontSize: 'small', }}>Login</Button>
+                            <Button variant="text" sx={{ fontSize: 'small', }} onClick={(event) => {event.stopPropagation(); setLogin(true); setSignin(false); }}>Login</Button>
                         </Box>
 
                     </Box>

@@ -4,14 +4,15 @@ import { Box, Button, Grid2, Typography } from "@mui/material";
 import { Destination, TagsDestination } from "../type";
 import { useEffect, useState } from "react";
 import Axios_Open from "../lib/Axios_Open";
-import Cookies from "js-cookie";
+import Cookies from "js-cookie"; 
 export default function SaveIsland({ selectedIsland, setLogin,setSignin }: { selectedIsland: Destination[], setLogin: (setLogin: boolean) => void , setSignin: (setSignin: boolean) => void }) {
     const [Tags, setTags] = useState<TagsDestination[]>([]);
     const getUniqueTags = (): string[] => {
         const allTags = selectedIsland.flatMap(island => island.tags);
         return Array.from(new Set(allTags)); // Remove duplicates
-    };
+    }; 
 
+ 
     const getTag = async () => {
         const allCookies = Cookies.get();
         const uniqueTags = getUniqueTags(); // Get unique tags
