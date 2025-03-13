@@ -1,13 +1,13 @@
 'use client'
-import { Box, Button, Card, CardContent, CardHeader, FormControl, Grid2, InputLabel, Select, Skeleton, Typography } from "@mui/material";
+import { Box, Button, Grid2, Skeleton, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { Destination, Pages, QnA } from "../type";
+import { Destination, Pages } from "../type";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Checkbox } from "@mui/material";
 import Cookies from "js-cookie";
 
 import Axios_Open from "../lib/Axios_Open";
-function RecommendationPage({ page, setPage, settargetPage, setSelected }: { page: Pages, setPage: (setPage: Pages) => void, settargetPage: (setPage: Pages) => void, setSelected: (setSelected: Destination[]) => void }) {
+function RecommendationPage({  setPage, settargetPage, setSelected }: {   setPage: (setPage: Pages) => void, settargetPage: (setPage: Pages) => void, setSelected: (setSelected: Destination[]) => void }) {
     const [selectedIsland, setSelectedIsland] = useState<Destination[]>([]);
     const [MAX_SELECTION] = useState<number>(5);
     const [recommendations, setRecommendations] = useState<Destination[]>([]);
@@ -185,7 +185,7 @@ function RecommendationPage({ page, setPage, settargetPage, setSelected }: { pag
                                     <Checkbox
                                         checked={selectedIsland.includes(destination)}
                                         onClick={(event) => event.stopPropagation()}
-                                        onChange={(event) => {
+                                        onChange={() => {
                                             handleSelect(destination)
                                         }}
                                         sx={{ position: "absolute", top: 8, left: 8, color: theme.palette.white_text.main }}

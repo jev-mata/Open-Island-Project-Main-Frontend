@@ -33,7 +33,7 @@ declare module "@mui/material/styles" {
 
 
 export default function PrimarySearchAppBar() {
-    const [mode, setMode] = useState<PaletteMode>("light"); // Use a function to ensure consistent initial state
+    const [mode ] = useState<PaletteMode>("light"); // Use a function to ensure consistent initial state
 
     const theme = useMemo(
         () =>
@@ -104,8 +104,36 @@ export default function PrimarySearchAppBar() {
 
         checkLogin();
     }, [router]);
-    const [categories, ] = useState<string[]>(['all', 'Mata islands', 'Nature and Eco', 'Adventure', 'Gastronomy', 'Recreational', 'Religious and Spiritual', 'Others', 'Accommodation', 'Cultural and Heritage']);
-    return (
+    useEffect(()=>{
+        if(user){
+
+        }
+    },[user])
+     
+    const [categories,setActive] = useState<{ name: string; isActive: boolean }[]>(
+        [
+          'all',
+          'Mata islands',
+          'Nature and Eco',
+          'Adventure',
+          'Gastronomy',
+          'Recreational',
+          'Religious and Spiritual',
+          'Others',
+          'Accommodation',
+          'Cultural and Heritage'
+        ].map(name => ({ name, isActive: false }))
+      );
+      const toggleCategory = (categoryName: string) => {
+        setActive(prevCategories =>
+          prevCategories.map(category =>
+            category.name === categoryName
+              ? { ...category, isActive: !category.isActive }
+              : category
+          )
+        );
+      };
+          return (
 
         <ThemeProvider theme={theme}>
             <CssBaseline />
@@ -114,37 +142,36 @@ export default function PrimarySearchAppBar() {
                 <Box sx={{ pt: 15, width: '80%', mx: 'auto',my:0 }}>
                     <Box>
                         {categories.map((val, index) => {
-                            const [isActive, setActive] = useState(index == 0 ? true : false);
                             const handleClick = () => {
                                 console.info('You clicked the Chip.');
-                                setActive(!isActive);
+                                toggleCategory(val.name);
                             };
-                            return (
-
-                                <Chip key={val} label={val} onClick={handleClick}
-                                    sx={{
-                                        px: 3,
-                                        py: 4,
-                                        m: 1,
-                                        backgroundColor: isActive ? theme.palette.button1.main : '',
-                                        borderRadius: 10,
-                                        fontSize: 'medium',
-                                        color: isActive ? theme.palette.white_text.main : '',
-                                        borderWidth:1,
-                                        borderStyle:'solid',
-                                        borderColor: theme.palette.action.selected,
-                                        '&:hover': {
-                                            opacity:0.8,
-                                            backgroundColor: isActive ? theme.palette.button1.main : '',
-                                            color: isActive ? theme.palette.white_text.main : '',
+                            
+                                return ( 
+                                    <Chip key={val.name} label={val.name} onClick={handleClick}
+                                        sx={{
+                                            px: 3,
+                                            py: 4,
+                                            m: 1,
+                                            backgroundColor: val.isActive ? theme.palette.button1.main : '',
+                                            borderRadius: 10,
+                                            fontSize: 'medium',
+                                            color: val.isActive  ? theme.palette.white_text.main : '',
                                             borderWidth:1,
                                             borderStyle:'solid',
-                                            borderColor:theme.palette.button1.main 
-                                        },
-                                    }}
-                                />
-                            )
-                        }
+                                            borderColor: theme.palette.action.selected,
+                                            '&:hover': {
+                                                opacity:0.8,
+                                                backgroundColor: val.isActive  ? theme.palette.button1.main : '',
+                                                color: val.isActive  ? theme.palette.white_text.main : '',
+                                                borderWidth:1,
+                                                borderStyle:'solid',
+                                                borderColor:theme.palette.button1.main 
+                                            },
+                                        }}
+                                    />
+                                )
+                            }
                         )}
                     </Box>
                     <Box>

@@ -3,7 +3,7 @@ import { Box, Button, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Pages } from "../type";
 
-function LandingPage({ page, setPage }: { page: Pages, setPage: (setPage: Pages) => void }) {
+function LandingPage({  setPage }: {   setPage: (setPage: Pages) => void }) {
 
     const theme = useTheme(); // ✅ Use the theme provided by RootLayout
     return (

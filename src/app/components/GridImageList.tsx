@@ -1,11 +1,11 @@
 
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
-import { IconButton, ImageListItemBar, useTheme } from '@mui/material';
-import InfoIcon from '@mui/icons-material/Info';
+import { IconButton, ImageListItemBar, useTheme } from '@mui/material'; 
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useState } from 'react';
+import Image from 'next/image';
 function srcset(image: string, size: number, rows = 1, cols = 1) {
     return {
         src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
@@ -31,7 +31,7 @@ export default function GridImageList() {
 
                         onClick={(event) => { event.stopPropagation(); setSelected(!isSelected) }}
                     >
-                        <img
+                        <Image
                             {...srcset(item.img, 221, item.rows, item.cols)}
                             alt={item.title}
                             loading="lazy"

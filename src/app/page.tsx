@@ -45,7 +45,7 @@ function page() {
   const [targetPage, settargetPage] = useState<Pages>('Loading');
 
   const [selectedIsland, SetSelectedIsland] = useState<Destination[]>([]);
-  const [mode, setMode] = useState<PaletteMode>(() => "light"); // Use a function to ensure consistent initial state
+  const [mode] = useState<PaletteMode>(() => "light"); // Use a function to ensure consistent initial state
   const [user, setUser] = useState<UserData | null>();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const router = useRouter();
@@ -78,6 +78,12 @@ function page() {
       router.push("/dashboard");
     }
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (user) { 
+    }
+  }, [user]);
+
   const theme = useMemo(
     () =>
       createTheme({
@@ -124,13 +130,7 @@ function page() {
 
   const [hover, setHover] = useState(false);
   const [signin, setSignin] = useState(false);
-  const [login, setLogin] = useState(false);
-  const toggleDarkMode = () => {
-    setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
-  };
-  const ToggleLogin = () => {
-    setLogin(!login);
-  }
+  const [login, setLogin] = useState(false); 
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
     if (!hydrated) {
@@ -222,19 +222,19 @@ function page() {
           </Container>
         </AppBar>
         {currentPage == 'Landing' ?
-          <LandingPage page={currentPage} setPage={setCurrentPage}></LandingPage>
+          <LandingPage  setPage={setCurrentPage}></LandingPage>
           : currentPage == 'Question' ?
             <QuestionPage setPage={setCurrentPage} settargetPage={settargetPage}></QuestionPage>
             : currentPage == 'Loading' ?
               <LoadingPage setPage={setCurrentPage} targetPage={targetPage}></LoadingPage>
               : currentPage == 'Recommendation' ?
-                <RecommendationPage page={currentPage} setPage={setCurrentPage} settargetPage={settargetPage} setSelected={SetSelectedIsland}></RecommendationPage>
+                <RecommendationPage  setPage={setCurrentPage} settargetPage={settargetPage} setSelected={SetSelectedIsland}></RecommendationPage>
                 : currentPage == 'Save' ?
-                  <SaveIsland selectedIsland={selectedIsland} setLogin={setLogin} setSignin={setSignin}></SaveIsland>
+                  <SaveIsland selectedIsland={selectedIsland}  setSignin={setSignin}></SaveIsland>
                   : ""
         }
         {signin && <Signup selectedIsland={selectedIsland} setLogin={setLogin} setSignin={setSignin}></Signup>}
-        {login && <Login selectedIsland={selectedIsland} setLogin={setLogin} setSignin={setSignin}></Login>}
+        {login && <Login  setLogin={setLogin} setSignin={setSignin}></Login>}
       </ThemeProvider>
     </>
   );

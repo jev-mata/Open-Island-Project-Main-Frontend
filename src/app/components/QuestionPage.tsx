@@ -101,7 +101,7 @@ function QuestionPage({  setPage, settargetPage }: { setPage: (setPage: Pages) =
         };
         const allCookies = Cookies.get();
         try {
-            const response = await Axios_Open.post("/api/save-session", formattedData,
+            await Axios_Open.post("/api/save-session", formattedData,
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -124,6 +124,8 @@ function QuestionPage({  setPage, settargetPage }: { setPage: (setPage: Pages) =
     //     }
     // }, [questions]);
     const theme = useTheme(); // ✅ Use the theme provided by RootLayout
+    
+    const [onHover, setHover] = useState<number>(-1);
     return (
         <Box sx={{
             width: '100%',
@@ -146,23 +148,22 @@ function QuestionPage({  setPage, settargetPage }: { setPage: (setPage: Pages) =
                 </CardHeader>
                 <CardContent>
                     {questions[Q_no].option.map((option, index) => {
-                        const [onHover, setHover] = useState<boolean>(false);
                         const opt = option.split(":");
 
                         const isSelected = questions[Q_no].selected === index;
                         const isAnySelected = questions[Q_no].selected !== -1;
                         return (
-                            <Button variant={isSelected ? "contained" : onHover ? "contained" : "outlined"} fullWidth key={index}
-                                onMouseEnter={() => { isAnySelected ? setHover(true) : '' }}
-                                onMouseLeave={() => { isAnySelected ? setHover(false) : "" }}
+                            <Button variant={isSelected ? "contained" : onHover==index ? "contained" : "outlined"} fullWidth key={index}
+                                onMouseEnter={() => { isAnySelected ? setHover(index) : '' }}
+                                onMouseLeave={() => { isAnySelected ? setHover(-1) : "" }}
                                 onClick={() => handleChange(index)}
                                 sx={{
                                     borderRadius: 5,
                                     borderWidth: 2,
                                     mb: 1,
-                                    color: isSelected ? '' : onHover ? '' : theme.palette.black.main,
-                                    bgcolor: isSelected ? theme.palette.button1.main : onHover ? theme.palette.button1.main : '',
-                                    borderColor: isSelected ? '' : onHover ? '' : theme.palette.black.main,
+                                    color: isSelected ? '' : onHover==index ? '' : theme.palette.black.main,
+                                    bgcolor: isSelected ? theme.palette.button1.main : onHover==index ? theme.palette.button1.main : '',
+                                    borderColor: isSelected ? '' : onHover==index ? '' : theme.palette.black.main,
                                     textAlign: 'left',
                                 }}>
                                 <Typography sx={{

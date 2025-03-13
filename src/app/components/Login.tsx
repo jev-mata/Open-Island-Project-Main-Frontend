@@ -1,7 +1,7 @@
 'use client'
 import Axios_Open from "../lib/Axios_Open";
-import { Alert, Box, Button, Grid2, Input, Slide, SlideProps, Snackbar, SnackbarCloseReason, TextField, Typography } from "@mui/material";
-import { Destination, Serverinty, TagsDestination } from "../type";
+import { Alert, Box, Button,  Slide, SlideProps, Snackbar,   TextField, Typography } from "@mui/material";
+import { Destination, Serverinty } from "../type";
 import Cookies from "js-cookie";
 import { useTheme } from "@mui/material/styles";
 import { useState } from "react";
@@ -11,7 +11,7 @@ interface ErrorResponse {
     message?: string; // Message may or may not exist
 }
 
-export default function Login({ selectedIsland, setLogin, setSignin }: { selectedIsland: Destination[], setLogin: (val: boolean) => void, setSignin: (val: boolean) => void }) {
+export default function Login({  setLogin, setSignin }: {   setLogin: (val: boolean) => void, setSignin: (val: boolean) => void }) {
 
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");

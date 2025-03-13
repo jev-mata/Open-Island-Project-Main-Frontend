@@ -71,7 +71,7 @@ export default function LoadingPage({  targetPage, setPage }: { setPage: (setPag
             }, 2000);
 
         }
-    }, [loading])
+    }, [loading,loadingImgs])
 
 
 

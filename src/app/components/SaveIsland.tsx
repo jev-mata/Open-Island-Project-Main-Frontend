@@ -5,7 +5,7 @@ import { Destination, TagsDestination } from "../type";
 import { useEffect, useState } from "react";
 import Axios_Open from "../lib/Axios_Open";
 import Cookies from "js-cookie"; 
-export default function SaveIsland({ selectedIsland, setLogin,setSignin }: { selectedIsland: Destination[], setLogin: (setLogin: boolean) => void , setSignin: (setSignin: boolean) => void }) {
+export default function SaveIsland({ selectedIsland,setSignin }: { selectedIsland: Destination[],  setSignin: (setSignin: boolean) => void }) {
     const [Tags, setTags] = useState<TagsDestination[]>([]);
     const getUniqueTags = (): string[] => {
         const allTags = selectedIsland.flatMap(island => island.tags);
