@@ -16,6 +16,14 @@ function srcset(image: string, size: number, rows = 1, cols = 1) {
 
 export default function GridImageList() {
     const theme = useTheme();
+    const [selectedItems, setSelectedItems] = useState<{ [key: string]: boolean }>({});
+
+    const toggleSelection = (key: string) => {
+        setSelectedItems(prevState => ({
+            ...prevState,
+            [key]: !prevState[key]
+        }));
+    };
 
     const borderRadius = 35;
     return (
@@ -24,12 +32,11 @@ export default function GridImageList() {
             variant="quilted"
             cols={4}
         >
-            {itemData.map((item) => {
-                const [isSelected, setSelected] = useState<boolean>(false);
+            {itemData.map((item) => { 
                 return (
                     <ImageListItem key={item.img} cols={item.cols || 1} rows={item.rows || 1}
 
-                        onClick={(event) => { event.stopPropagation(); setSelected(!isSelected) }}
+                    onClick={(event) => { event.stopPropagation(); toggleSelection(item.img); }}
                     >
                         <Image
                             {...srcset(item.img, 221, item.rows, item.cols)}
@@ -54,20 +61,13 @@ export default function GridImageList() {
                                     style={{
                                         marginRight: 15, marginTop: 15
                                     }}
-                                    onClick={(event) => { event.stopPropagation(); setSelected(!isSelected) }}
-                                >
-                                    {!isSelected ?
-                                        <FavoriteBorderIcon sx={{ color: theme.palette.white_text.main }}
-                                            style={{
-                                                fontSize: 'xx-large',
-                                            }}
-                                        /> :
-
-                                        <FavoriteIcon sx={{ color: theme.palette.white_text.main }}
-                                            style={{
-                                                fontSize: 'xx-large',
-                                            }}
-                                        />}
+                                    onClick={(event) => { event.stopPropagation(); toggleSelection(item.img); }}
+                            >
+                                {selectedItems[item.img] ? (
+                                    <FavoriteIcon sx={{ color: theme.palette.white_text.main, fontSize: 'xx-large' }} />
+                                ) : (
+                                    <FavoriteBorderIcon sx={{ color: theme.palette.white_text.main, fontSize: 'xx-large' }} />
+                                )}
 
                                 </IconButton>
                             }

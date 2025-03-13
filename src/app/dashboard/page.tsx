@@ -141,7 +141,7 @@ export default function PrimarySearchAppBar() {
             <Box sx={{ width: '100%', m: 0, bgcolor: theme.palette.white.main }}>
                 <Box sx={{ pt: 15, width: '80%', mx: 'auto',my:0 }}>
                     <Box>
-                        {categories.map((val, index) => {
+                        {categories.map((val) => {
                             const handleClick = () => {
                                 console.info('You clicked the Chip.');
                                 toggleCategory(val.name);

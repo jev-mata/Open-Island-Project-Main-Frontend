@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 import { StaticImageData } from "next/image";
 import { Pages } from "../type";
 
-export default function LoadingPage({  targetPage, setPage }: { setPage: (setPage: Pages) => void, targetPage: Pages }) {
+export default function LoadingPage({ targetPage, setPage }: { setPage: (setPage: Pages) => void, targetPage: Pages }) {
 
     const [loadingImgs] = useState<{ img: StaticImageData, text: string }[]>([
         {
@@ -71,7 +71,7 @@ export default function LoadingPage({  targetPage, setPage }: { setPage: (setPag
             }, 2000);
 
         }
-    }, [loading,loadingImgs])
+    }, [loading, loadingImgs, targetPage])
 
 
 

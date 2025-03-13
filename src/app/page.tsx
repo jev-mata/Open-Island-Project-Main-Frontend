@@ -40,7 +40,7 @@ declare module "@mui/material/styles" {
   }
 }
 
-function page() {
+function Page() {
   const [currentPage, setCurrentPage] = useState<Pages>('Landing');
   const [targetPage, settargetPage] = useState<Pages>('Loading');
 
@@ -240,4 +240,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;

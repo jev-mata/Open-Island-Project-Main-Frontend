@@ -12,29 +12,6 @@ export default function SaveIsland({ selectedIsland,setSignin }: { selectedIslan
         return Array.from(new Set(allTags)); // Remove duplicates
     }; 
 
- 
-    const getTag = async () => {
-        const allCookies = Cookies.get();
-        const uniqueTags = getUniqueTags(); // Get unique tags
-        console.log("uniqueTags", uniqueTags);
-        Axios_Open.post("/api/get/tag", {
-            tags: uniqueTags
-        }, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-XSRF-TOKEN': allCookies['XSRF-TOKEN'],
-                'CSRF-TOKEN': allCookies['XSRF-TOKEN'],
-            },
-            withCredentials: true, // Maintain session using cookies
-        })
-            .then(response => {
-                console.log(response.data);
-                setTags(response.data as TagsDestination[]);
-            })
-            .catch(error => console.error("Error:", error));
-
-    }
     const positions = [
         { name: "top", zIndex: 2 },
         { name: "left", zIndex: 1 },
@@ -44,6 +21,29 @@ export default function SaveIsland({ selectedIsland,setSignin }: { selectedIslan
     ];
 
     useEffect(() => {
+ 
+        const getTag = async () => {
+            const allCookies = Cookies.get();
+            const uniqueTags = getUniqueTags(); // Get unique tags
+            console.log("uniqueTags", uniqueTags);
+            Axios_Open.post("/api/get/tag", {
+                tags: uniqueTags
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-XSRF-TOKEN': allCookies['XSRF-TOKEN'],
+                    'CSRF-TOKEN': allCookies['XSRF-TOKEN'],
+                },
+                withCredentials: true, // Maintain session using cookies
+            })
+                .then(response => {
+                    console.log(response.data);
+                    setTags(response.data as TagsDestination[]);
+                })
+                .catch(error => console.error("Error:", error));
+    
+        }
         getTag();
     }, [])
     const theme = useTheme(); // ✅ Use the theme provided by RootLayout

@@ -77,7 +77,7 @@ function RecommendationPage({  setPage, settargetPage, setSelected }: {   setPag
             hasFetched.current = true;
             fetchRecommendations();
         }
-    }, [isFetch]);
+    }, [isFetch,fetchRecommendations]);
     return (
         <Box sx={{
             width: '100%',
