@@ -72,12 +72,12 @@ function Page() {
     };
 
     checkLogin();
-  }, []);
+  }, [router]);
   useEffect(() => {
     if (isAuthenticated) {
       router.push("/dashboard");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated,router]);
 
   useEffect(() => {
     if (user) { 

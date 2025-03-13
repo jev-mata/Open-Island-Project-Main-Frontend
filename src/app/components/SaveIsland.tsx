@@ -45,7 +45,7 @@ export default function SaveIsland({ selectedIsland,setSignin }: { selectedIslan
     
         }
         getTag();
-    }, [])
+    }, [getUniqueTags])
     const theme = useTheme(); // ✅ Use the theme provided by RootLayout
     return (
         <Box sx={{
