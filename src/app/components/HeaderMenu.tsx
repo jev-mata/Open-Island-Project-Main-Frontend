@@ -21,6 +21,7 @@ import AppBar from '@mui/material/AppBar';
 import Axios_Open from '../lib/Axios_Open';
 import Cookies from "js-cookie";
 import iconLogo from '@/Images/openisland icon.png';
+import Image from 'next/image';
 
 export default function HeaderMenu() {
 
@@ -225,10 +226,10 @@ export default function HeaderMenu() {
 
                     <IconButton
                         sx={{ display: { xs: 'block', sm: 'none' } }}>
-                        <img src={iconLogo.src} alt='' width={50} height={50} style={{
+                        <Image src={iconLogo.src} alt='' width={50} height={50} style={{
                             filter: "drop-shadow(1px 1px 1px black) drop-shadow(-1px -1px 1px black)", // Adjust thickness and color
                         }}
-                        ></img>
+                        ></Image>
                     </IconButton>
                     <Box sx={{ flexGrow: 1 }} />
                     <Search

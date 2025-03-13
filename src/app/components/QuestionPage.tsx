@@ -1,5 +1,5 @@
 'use client'
-import { Box, Button, Card, CardContent, CardHeader,  Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, CardHeader, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Pages, QnA } from "../type";
 import { useEffect, useState } from "react";
@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 import Axios_Open from "../lib/Axios_Open";
 import { getCsrfToken } from "../fetch/api_fetch";
 
-function QuestionPage({  setPage, settargetPage }: { setPage: (setPage: Pages) => void, settargetPage: (setPage: Pages) => void }) {
+function QuestionPage({ setPage, settargetPage }: { setPage: (setPage: Pages) => void, settargetPage: (setPage: Pages) => void }) {
     const [questions, setQuestions] = useState<QnA[]>([
         {
             question: 'What activities make your vacation unforgettable?',
@@ -43,7 +43,7 @@ function QuestionPage({  setPage, settargetPage }: { setPage: (setPage: Pages) =
 
     const [selectedQuestions, setselectedQuestions] = useState<boolean>(false);
     useEffect(() => {
-        if (!selectedQuestions) { 
+        if (!selectedQuestions) {
             setselectedQuestions(true);
             const savedSelections = Cookies.get("selectedQuestions");
             if (savedSelections) {
@@ -124,7 +124,7 @@ function QuestionPage({  setPage, settargetPage }: { setPage: (setPage: Pages) =
     //     }
     // }, [questions]);
     const theme = useTheme(); // ✅ Use the theme provided by RootLayout
-    
+
     const [onHover, setHover] = useState<number>(-1);
     return (
         <Box sx={{
@@ -152,18 +152,19 @@ function QuestionPage({  setPage, settargetPage }: { setPage: (setPage: Pages) =
 
                         const isSelected = questions[Q_no].selected === index;
                         const isAnySelected = questions[Q_no].selected !== -1;
+                        const isHovered = onHover === index;
                         return (
-                            <Button variant={isSelected ? "contained" : onHover==index ? "contained" : "outlined"} fullWidth key={index}
-                                onMouseEnter={() => { isAnySelected ? setHover(index) : '' }}
-                                onMouseLeave={() => { isAnySelected ? setHover(-1) : "" }}
+                            <Button variant={isSelected || isHovered ? "contained" : "outlined"} fullWidth key={index}
+                                onMouseEnter={() => { if (isAnySelected) setHover(index) }}
+                                onMouseLeave={() => { if (isAnySelected) setHover(-1) }}
                                 onClick={() => handleChange(index)}
                                 sx={{
                                     borderRadius: 5,
                                     borderWidth: 2,
                                     mb: 1,
-                                    color: isSelected ? '' : onHover==index ? '' : theme.palette.black.main,
-                                    bgcolor: isSelected ? theme.palette.button1.main : onHover==index ? theme.palette.button1.main : '',
-                                    borderColor: isSelected ? '' : onHover==index ? '' : theme.palette.black.main,
+                                    color: isSelected || isHovered ? '' : theme.palette.black.main,
+                                    bgcolor: isSelected || isHovered ? theme.palette.button1.main : '',
+                                    borderColor: isSelected || isHovered ? '' : theme.palette.black.main,
                                     textAlign: 'left',
                                 }}>
                                 <Typography sx={{
