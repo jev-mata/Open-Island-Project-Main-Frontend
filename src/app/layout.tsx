@@ -1,4 +1,4 @@
- 
+
 
 import * as React from 'react';
 import "@fontsource/inter"; // Defaults to 400 weight
@@ -15,24 +15,26 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   // const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
   return (
-    <html lang="en">
+    <html lang="en"> 
       <body style={{
         backgroundImage: `URL(${landingPageIMG.src})`,  // Apply the image as a background
         backgroundSize: 'Cover',                   // Ensure the image covers the entire Box
         backgroundPositionY: '34%',              // Align the image to the center
         backgroundPositionX: 'center',              // Align the image to the center
         backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed', 
+        backgroundAttachment: 'fixed',
         justifyContent: 'center',                  // Center horizontally
         alignItems: 'center',                      // Center vertically
         color: 'black',                            // Change text color to white (optional, depends on background image)
         fontSize: '2rem',                          // Optional: Adjust font size (for visibility)
         textAlign: 'center',
         width: '100%',
-        margin:'0',
-        padding:'0'
+        margin: '0',
+        padding: '0'
       }}>
-          {children}
+
+
+        {children}
       </body>
     </html>
   );

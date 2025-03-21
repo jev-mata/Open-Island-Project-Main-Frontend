@@ -3,11 +3,13 @@ import { useEffect, useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
 import { createTheme, PaletteMode, ThemeProvider } from '@mui/material/styles';
 import HeaderMenu from '../components/HeaderMenu';
-import { Chip, CssBaseline, Divider } from '@mui/material';
+import { Chip, CssBaseline, Divider, useMediaQuery } from '@mui/material';
 import Axios_Open from '../lib/Axios_Open';
-import { UserData } from '../type';
+import { DestinationCol, UserData } from '../type';
 import { useRouter } from 'next/navigation';
 import GridImageList from '../components/GridImageList';
+import { getCsrfToken } from '../fetch/api_fetch';
+import Footer from '../components/Footer';
 declare module "@mui/material/styles" {
     interface Palette {
         header: Palette["primary"];
@@ -33,8 +35,96 @@ declare module "@mui/material/styles" {
 
 
 export default function PrimarySearchAppBar() {
-    const [mode ] = useState<PaletteMode>("light"); // Use a function to ensure consistent initial state
-
+    const [mode] = useState<PaletteMode>("light"); // Use a function to ensure consistent initial state
+    const [isDestLoaded, setLoaded] = useState<boolean>(false);
+    const [itemDestination, setDestinationItem] = useState<DestinationCol[]>([
+        {
+            thumbnail: '',
+            name: 'Breakfast',
+            description: 'Breakfast',
+            rows: 1,
+            cols: 1,
+        },
+        {
+            thumbnail: '',
+            name: 'Burger',
+            rows: 2,
+            cols: 2,
+        },
+        {
+            thumbnail: '',
+            name: 'Camera',
+        },
+        {
+            thumbnail: '',
+            name: 'Coffee',
+            rows: 1,
+            cols: 1,
+        },
+        {
+            thumbnail: '',
+            name: 'Hats',
+            cols: 1,
+        },
+        {
+            thumbnail: '',
+            name: 'Honey',
+            author: '@arwinneil',
+            rows: 2,
+            cols: 2,
+        },
+        {
+            thumbnail: '',
+            name: 'Basketball',
+        },
+        {
+            thumbnail: '',
+            name: 'Fern',
+        },
+        {
+            thumbnail: '',
+            name: 'Mushrooms',
+            rows: 2,
+            cols: 2,
+        },
+        {
+            thumbnail: '',
+            name: 'Tomato basil',
+        },
+        {
+            thumbnail: '',
+            name: 'Sea star',
+        },
+        {
+            thumbnail: '',
+            name: 'Bike',
+            cols: 1,
+        },
+        {
+            thumbnail: '',
+            name: 'Bike',
+            cols: 2,
+            rows: 2,
+        },
+        {
+            thumbnail: '',
+            name: 'Bike',
+            cols: 1,
+            rows: 1,
+        },
+        {
+            thumbnail: '',
+            name: 'Bike',
+            cols: 1,
+            rows: 1,
+        },
+        {
+            thumbnail: '',
+            name: 'Bike',
+            cols: 1,
+            rows: 1,
+        },
+    ]);
     const theme = useMemo(
         () =>
             createTheme({
@@ -101,91 +191,174 @@ export default function PrimarySearchAppBar() {
                 setUser(null);
             }
         };
-
+        getCsrfToken();
         checkLogin();
-    }, [router]);
-    useEffect(()=>{
-        if(user){
+    }, [router,]);
+    useEffect(() => {
+
+        if (user) {
 
         }
-    },[user])
-     
-    const [categories,setActive] = useState<{ name: string; isActive: boolean }[]>(
+    }, [user]);
+    useEffect(() => {
+        getCsrfToken();
+    }, [getCsrfToken]);
+
+    // useEffect(() => {
+
+
+    //     const fetchDestinations = async () => {
+    //         setLoaded(false);
+    //         try {
+    //             const response = await Axios_Open.get('/api/destinations/recommendation');
+    //             const data = response.data as DestinationCol[];
+    //             setDestinationItem((prevItems) =>
+    //                 data.map((dest, index) => ({
+    //                     thumbnail: dest.thumbnail,
+    //                     name: dest.name,
+    //                     rows: prevItems[index]?.rows ?? 1, // Preserve existing rows, default to 1
+    //                     cols: prevItems[index]?.cols ?? 1, // Preserve existing cols, default to 1
+    //                 }))
+    //             );
+    //             setLoaded(true);
+    //         } catch (error) {
+    //             setLoaded(false);
+    //             console.error('Error fetching destinations:', error);
+    //             return [];
+    //         }
+    //     };
+    //     fetchDestinations();
+    // }, []);
+
+    const [categories, setActive] = useState<{ name: string; isActive: boolean }[]>(
         [
-          'all',
-          'Mata islands',
-          'Nature and Eco',
-          'Adventure',
-          'Gastronomy',
-          'Recreational',
-          'Religious and Spiritual',
-          'Others',
-          'Accommodation',
-          'Cultural and Heritage'
-        ].map(name => ({ name, isActive: false }))
-      );
-      const toggleCategory = (categoryName: string) => {
-        setActive(prevCategories =>
-          prevCategories.map(category =>
-            category.name === categoryName
-              ? { ...category, isActive: !category.isActive }
-              : category
-          )
-        );
-      };
-          return (
+            'All',
+            'Mata Islands',
+            'Nature and Eco',
+            'Adventure',
+            'Gastronomy',
+            'Recreational',
+            'Religious and Spiritual',
+            'Others',
+            'Accommodation',
+            'Cultural and Heritage'
+        ].map(name => ({ name, isActive: name === 'All' }))
+    );
+    const toggleCategory = (categoryName: string) => {
+        setLoaded(false);
+
+        setActive(prevCategories => {
+            if (categoryName === "All") {
+                // If "All" is selected, deactivate everything else and activate "All"
+                return prevCategories.map(category => ({
+                    ...category,
+                    isActive: category.name === "All"
+                }));
+            } else {
+                // Toggle selected category
+                const updatedCategories = prevCategories.map(category =>
+                    category.name === categoryName
+                        ? { ...category, isActive: !category.isActive }
+                        : category.name === "All"
+                            ? { ...category, isActive: false } // Deactivate "All"
+                            : category
+                );
+
+                // Check if no category is active after toggle
+                const isAnyActive = updatedCategories.some(cat => cat.isActive);
+                if (!isAnyActive) {
+                    // If none are active, reactivate "All"
+                    return updatedCategories.map(category => ({
+                        ...category,
+                        isActive: category.name === "All"
+                    }));
+                }
+
+                return updatedCategories;
+            }
+        });
+    };
+
+    useEffect(() => {
+
+        const fetchFilteredDestinations = async () => {
+            const selectedCategories = categories
+                .filter(category => category.isActive && category.name !== "All")
+                .map(category => category.name);
+            try {
+                const response = await Axios_Open.post('/api/destinations/recommendationByTag', {
+                    categories: selectedCategories, // Send selected categories to the backend 
+                });
+                const data = response.data as DestinationCol[];
+                setDestinationItem((prevItems) =>
+                    data.map((dest, index) => ({
+                        thumbnail: dest.thumbnail,
+                        name: dest.name,
+                        description: dest.description,
+                        rows: prevItems[index]?.rows ?? 1, // Preserve existing rows, default to 1
+                        cols: prevItems[index]?.cols ?? 1, // Preserve existing cols, default to 1
+                    }))
+                ); setLoaded(true);
+                console.log(response.data);
+            } catch (error) {
+                console.error("Error fetching destinations:", error);
+            }
+        };
+        fetchFilteredDestinations();
+    }, [categories]);
+
+    const isMobileWidth = useMediaQuery("(max-width:700px)");
+    const isTabWidth = useMediaQuery("(max-width:1100px)");
+    return (
 
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <HeaderMenu></HeaderMenu>
-            <Box sx={{ width: '100%', m: 0, bgcolor: theme.palette.white.main }}>
-                <Box sx={{ pt: 15, width: '80%', mx: 'auto',my:0 }}>
+            <Box sx={{ width: '100%', m: 0, bgcolor: theme.palette.white.main,position:'absolute'}}>
+                <Box sx={{ pt: 15, width: isMobileWidth ? '100%' : isTabWidth ? '100%' : '80%', mx: 'auto', my: 0 }}>
                     <Box>
                         {categories.map((val) => {
                             const handleClick = () => {
                                 console.info('You clicked the Chip.');
                                 toggleCategory(val.name);
                             };
-                            
-                                return ( 
-                                    <Chip key={val.name} label={val.name} onClick={handleClick}
-                                        sx={{
-                                            px: 3,
-                                            py: 4,
-                                            m: 1,
+
+                            return (
+                                <Chip key={val.name} label={val.name} onClick={handleClick}
+                                    sx={{
+                                        px: isMobileWidth ? 1 : isTabWidth ? 1 : 3,
+                                        py: isMobileWidth ? 1 : isTabWidth ? 1 : 4,
+                                        m: 1,
+                                        backgroundColor: val.isActive ? theme.palette.button1.main : '',
+                                        borderRadius: 10,
+                                        fontSize: 'medium',
+                                        color: val.isActive ? theme.palette.white_text.main : '',
+                                        borderWidth: 1,
+                                        borderStyle: 'solid',
+                                        borderColor: theme.palette.action.selected,
+                                        '&:hover': {
+                                            opacity: 0.8,
                                             backgroundColor: val.isActive ? theme.palette.button1.main : '',
-                                            borderRadius: 10,
-                                            fontSize: 'medium',
-                                            color: val.isActive  ? theme.palette.white_text.main : '',
-                                            borderWidth:1,
-                                            borderStyle:'solid',
-                                            borderColor: theme.palette.action.selected,
-                                            '&:hover': {
-                                                opacity:0.8,
-                                                backgroundColor: val.isActive  ? theme.palette.button1.main : '',
-                                                color: val.isActive  ? theme.palette.white_text.main : '',
-                                                borderWidth:1,
-                                                borderStyle:'solid',
-                                                borderColor:theme.palette.button1.main 
-                                            },
-                                        }}
-                                    />
-                                )
-                            }
+                                            color: val.isActive ? theme.palette.white_text.main : '',
+                                            borderWidth: 1,
+                                            borderStyle: 'solid',
+                                            borderColor: theme.palette.button1.main
+                                        },
+                                    }}
+                                />
+                            )
+                        }
                         )}
                     </Box>
                     <Box>
-                        <GridImageList></GridImageList>
+                        <GridImageList itemData={itemDestination} isDestLoaded={isDestLoaded}></GridImageList>
                     </Box>
-                    <Divider  sx={{
-                        pb:5,
-                        height:21
-                    }}></Divider>
                     <Box sx={{
-                        pb:5,
+                        pb: 5,
                     }}>
                     </Box>
                 </Box>
+                <Footer></Footer>
             </Box>
         </ThemeProvider>
     );

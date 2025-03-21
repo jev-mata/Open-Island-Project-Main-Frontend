@@ -59,7 +59,7 @@ function Page() {
         if (response.data.authenticated && response.data.user) {
           setUser(response.data.user);
           setIsAuthenticated(true);
-          router.push('/dashboard');
+          // router.push('/dashboard');
         } else {
           setUser(null);
           setIsAuthenticated(false);
@@ -77,10 +77,10 @@ function Page() {
     if (isAuthenticated) {
       router.push("/dashboard");
     }
-  }, [isAuthenticated,router]);
+  }, [isAuthenticated, router]);
 
   useEffect(() => {
-    if (user) { 
+    if (user) {
     }
   }, [user]);
 
@@ -130,7 +130,7 @@ function Page() {
 
   const [hover, setHover] = useState(false);
   const [signin, setSignin] = useState(false);
-  const [login, setLogin] = useState(false); 
+  const [login, setLogin] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
     if (!hydrated) {
@@ -222,19 +222,19 @@ function Page() {
           </Container>
         </AppBar>
         {currentPage == 'Landing' ?
-          <LandingPage  setPage={setCurrentPage}></LandingPage>
+          <LandingPage setPage={setCurrentPage}></LandingPage>
           : currentPage == 'Question' ?
             <QuestionPage setPage={setCurrentPage} settargetPage={settargetPage}></QuestionPage>
             : currentPage == 'Loading' ?
               <LoadingPage setPage={setCurrentPage} targetPage={targetPage}></LoadingPage>
               : currentPage == 'Recommendation' ?
-                <RecommendationPage  setPage={setCurrentPage} settargetPage={settargetPage} setSelected={SetSelectedIsland}></RecommendationPage>
+                <RecommendationPage setPage={setCurrentPage} settargetPage={settargetPage} setSelected={SetSelectedIsland}></RecommendationPage>
                 : currentPage == 'Save' ?
-                  <SaveIsland selectedIsland={selectedIsland}  setSignin={setSignin}></SaveIsland>
+                  <SaveIsland selectedIsland={selectedIsland} setSignin={setSignin}></SaveIsland>
                   : ""
         }
         {signin && <Signup selectedIsland={selectedIsland} setLogin={setLogin} setSignin={setSignin}></Signup>}
-        {login && <Login  setLogin={setLogin} setSignin={setSignin}></Login>}
+        {login && <Login setLogin={setLogin} setSignin={setSignin}></Login>}
       </ThemeProvider>
     </>
   );

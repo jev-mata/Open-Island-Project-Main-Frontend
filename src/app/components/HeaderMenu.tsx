@@ -6,14 +6,14 @@ import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu'; 
+import Menu from '@mui/material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import { styled, alpha, useTheme } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
@@ -22,7 +22,9 @@ import Axios_Open from '../lib/Axios_Open';
 import Cookies from "js-cookie";
 import iconLogo from '@/Images/openisland icon.png';
 import Image from 'next/image';
-
+import { getCsrfToken } from '../fetch/api_fetch';
+import logo2 from '../../Images/logo2.png';
+import { useRouter } from 'next/navigation';
 export default function HeaderMenu() {
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -83,6 +85,10 @@ export default function HeaderMenu() {
         },
     }));
 
+    useEffect(() => {
+        getCsrfToken();
+    }, [getCsrfToken]);
+
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -95,10 +101,32 @@ export default function HeaderMenu() {
         setAnchorEl(null);
         handleMobileMenuClose();
     };
+    useEffect(() => {
+        const checkLogin = async () => {
+            try {
+                const response = await Axios_Open.get("/api/www/checkAuth", {
+                    withCredentials: true, // ✅ Important for Laravel Sanctum or session-based auth
+                });
+
+                if (response.data.authenticated && response.data.user) {
+                    console.log(response.data.authenticated);
+                    console.log(response.data.user);
+                } else {
+                    console.log(response.data.authenticated);
+                    console.log(response.data.user);
+                }
+            } catch (error) {
+                console.error("Error checking login:", error);
+            }
+        };
+
+        checkLogin();
+    }, []);
     const handleLogout = async () => {
         try {
             const allCookies = Cookies.get();
-              await Axios_Open.post("/api/logout",
+            console.log(allCookies['XSRF-TOKEN']);
+            const res = await Axios_Open.post("/api/logout", {},
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -108,6 +136,9 @@ export default function HeaderMenu() {
                     },
                     withCredentials: true, // Maintain session using cookies
                 });
+            if (res.data.message == 'Logged out') {
+                window.location.href = process.env.NEXT_PUBLIC_API_URL ? 'http://localhost:3000' : 'https://www.openisland.ph/'
+            }
             // console.log("Session saved:", response.data);
         } catch (error) {
             console.error("Error saving session:", error);
@@ -117,6 +148,9 @@ export default function HeaderMenu() {
     const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setMobileMoreAnchorEl(event.currentTarget);
     };
+    const router = useRouter();
+
+
 
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
@@ -134,9 +168,9 @@ export default function HeaderMenu() {
             }}
             open={isMenuOpen}
             onClose={handleMenuClose}
-            sx={{top:'4%'}}
+            sx={{ top: '4%'  }}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+            <MenuItem onClick={() => router.push("/profile")}>Profile</MenuItem>
             <MenuItem onClick={handleMenuClose}>My account</MenuItem>
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>
@@ -156,6 +190,7 @@ export default function HeaderMenu() {
                 vertical: 'top',
                 horizontal: 'right',
             }}
+            sx={{  position: 'absolute' }}
             open={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
         >
@@ -201,7 +236,7 @@ export default function HeaderMenu() {
             <AppBar position="static" sx={{
                 position: 'fixed',
                 backgroundColor: theme.palette.white.main, zIndex: 99,
-                p: 0,m:0
+                p: 0, m: 0
 
             }}>
                 <Toolbar sx={{ p: 0 }}>
@@ -214,7 +249,7 @@ export default function HeaderMenu() {
                 >
                     <MenuIcon color='disabled' />
                 </IconButton> */}
-                    <Typography
+                    {/* <Typography
                         variant="h6"
                         noWrap
 
@@ -222,7 +257,18 @@ export default function HeaderMenu() {
                         sx={{ display: { xs: 'none', sm: 'block', color: theme.palette.button1.main, width: 150 } }}
                     >
                         Open Island
-                    </Typography>
+                    </Typography> */}
+                    <Box sx={{ display: { xs: 'none', sm: 'block', color: theme.palette.button1.main, width: 150 } }}
+                    >
+
+                        <Image width={100} height={100} style={{
+                            cursor: 'pointer',
+                            height: 'auto', width: 'auto'
+                        }} src={logo2.src} alt=''
+                            onClick={() => router.push('/dashboard')} >
+
+                        </Image>
+                    </Box>
 
                     <IconButton
                         sx={{ display: { xs: 'block', sm: 'none' } }}>

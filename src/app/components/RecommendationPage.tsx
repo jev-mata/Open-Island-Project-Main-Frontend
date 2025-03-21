@@ -7,7 +7,7 @@ import { Checkbox } from "@mui/material";
 import Cookies from "js-cookie";
 
 import Axios_Open from "../lib/Axios_Open";
-function RecommendationPage({  setPage, settargetPage, setSelected }: {   setPage: (setPage: Pages) => void, settargetPage: (setPage: Pages) => void, setSelected: (setSelected: Destination[]) => void }) {
+function RecommendationPage({ setPage, settargetPage, setSelected }: { setPage: (setPage: Pages) => void, settargetPage: (setPage: Pages) => void, setSelected: (setSelected: Destination[]) => void }) {
     const [selectedIsland, setSelectedIsland] = useState<Destination[]>([]);
     const [MAX_SELECTION] = useState<number>(5);
     const [recommendations, setRecommendations] = useState<Destination[]>([]);
@@ -35,7 +35,7 @@ function RecommendationPage({  setPage, settargetPage, setSelected }: {   setPag
         setPage('Loading');
         settargetPage('Save');
         setSelected(selectedIsland);
-        
+
     }
     const theme = useTheme(); // ✅ Use the theme provided by RootLayout
 
@@ -77,7 +77,7 @@ function RecommendationPage({  setPage, settargetPage, setSelected }: {   setPag
             hasFetched.current = true;
             fetchRecommendations();
         }
-    }, [isFetch,fetchRecommendations]);
+    }, [isFetch, fetchRecommendations]);
     return (
         <Box sx={{
             width: '100%',
@@ -174,7 +174,7 @@ function RecommendationPage({  setPage, settargetPage, setSelected }: {   setPag
                                             backgroundPosition: 'center',
                                             backgroundSize: '100% auto',
                                             width: "100%",
-                                            height: "120px",
+                                            height: "140px",
                                             borderRadius: 5,
                                             transition: 'all 0.2s ease-in-out',
                                             objectFit: "cover",
@@ -202,15 +202,21 @@ function RecommendationPage({  setPage, settargetPage, setSelected }: {   setPag
                                             backgroundImage: "linear-gradient(to top, " + theme.palette.gradient_b.main + "," + theme.palette.gradient_t.main + ")",
                                         }}
                                     >
-
                                         <Typography
                                             sx={{
-                                                width: '100%',
-                                                position: "absolute",
+                                                width: '90%', 
                                                 bottom: 4,
                                                 color: theme.palette.black.main,
+                                                whiteSpace: "nowrap",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                                textAlign: "center",
+                                                position: "absolute",   left: '50%', transform: 'translate(-50%, 0%)',
+                                                p:0
                                             }}
-                                        >{destination.name}</Typography>
+                                        >
+                                            {destination.name}
+                                        </Typography>
                                     </Box>
                                 </Box>
                             </Grid2>
@@ -218,9 +224,9 @@ function RecommendationPage({  setPage, settargetPage, setSelected }: {   setPag
                     </Grid2>
                     <Button
                         onClick={onClickSave}
-                        disabled={selectedIsland.length==0}
+                        disabled={selectedIsland.length == 0}
                         sx={{
-                            bgcolor: selectedIsland.length==0?theme.palette.action.disabled:theme.palette.button1.main,
+                            bgcolor: selectedIsland.length == 0 ? theme.palette.action.disabled : theme.palette.button1.main,
                             color: theme.palette.white_text.main,
                             borderRadius: 10,
                             minWidth: 200,

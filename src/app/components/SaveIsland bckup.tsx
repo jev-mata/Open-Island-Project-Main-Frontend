@@ -147,4 +147,4 @@ const ImageBox = ({ src, position, index }: { src: string; position: string, ind
             }} />
         </Box>
     );
-};  
+};

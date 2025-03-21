@@ -126,10 +126,10 @@ export default function Login({  setLogin, setSignin }: {   setLogin: (val: bool
                             pl: 5
                         }}
                     >
-                        Sign Up Now
+                        Login
                     </Typography>
 
-                    <Typography
+                    {/* <Typography
                         sx={{
                             width: '100%',
                             color: theme.palette.black.main,
@@ -140,7 +140,7 @@ export default function Login({  setLogin, setSignin }: {   setLogin: (val: bool
                         }}
                     >
                         Ready to Start Your Journey?
-                    </Typography>
+                    </Typography> */}
                     <Box
                         sx={{
                             width: '100%',
