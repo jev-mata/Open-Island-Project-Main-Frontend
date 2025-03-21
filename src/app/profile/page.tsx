@@ -94,9 +94,10 @@ export default function Profile() {
                     withCredentials: true, // ✅ Important for Laravel Sanctum or session-based auth
                 });
 
+                console.log(response.data);
                 if (response.data.authenticated && response.data.user) {
                     setUser(response.data.user);
-                    setProfile(response.data.profile);
+                    setProfile(response.data.profile as ProfileType);
                 } else {
                     setUser(null);
                     router.push('/');
@@ -108,12 +109,16 @@ export default function Profile() {
         };
         checkLogin();
     }, [router,]);
+    useEffect(() => {
+        console.log(profile);
+    }, [profile])
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <Box sx={{
                 backgroundColor: theme.palette.black.main,
-                position: 'relative'
+                width: "100%",
+                position: 'absolute'
             }}>
                 <HeaderMenu></HeaderMenu>
                 <Box
@@ -159,7 +164,7 @@ export default function Profile() {
                                 {user?.fname.replace(/\b\w/g, (char) => char.toUpperCase()) + " " + user?.lname.replace(/\b\w/g, (char) => char.toUpperCase())}
                             </Typography>
                             <Typography fontSize={isMobileWidth ? 'medium' : 'x-large'} color='white' fontFamily={'inter'} fontWeight={'normal'}>
-                                @{profile?profile.username:''}
+                                @{profile ? profile.username : ''}
                             </Typography>
                             <Grid2 container spacing={4} sx={{
                                 width: isMobileWidth ? '100%' : '45%',
