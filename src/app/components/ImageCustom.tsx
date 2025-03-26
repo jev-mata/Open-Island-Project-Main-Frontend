@@ -12,7 +12,7 @@ function srcset(image: string, size: number, rows = 1, cols = 1) {
     };
 }
 
-export default function ImageCustom({ item, borderRadius, isHover }: { item: DestinationCol, borderRadius: number, isHover: boolean }) {
+export default function ImageCustom({ item, borderRadius, isHover }: { item: DestinationCol | null, borderRadius: number, isHover: boolean }) {
     const [isLoad, setLoad] = useState<boolean>(false);
 
     const isMobileWidth = useMediaQuery("(max-width:600px)");
@@ -23,7 +23,7 @@ export default function ImageCustom({ item, borderRadius, isHover }: { item: Des
             background: isHover ? 'rgba(0,0,0,1)' : 'rgba(0,0,0,0)'
         }}
         >
-            {item.thumbnail != "" ?
+            {item && item.thumbnail != "" ?
                 <Image
                     onLoad={() => setLoad(true)}
                     {...srcset(item.thumbnail, 351, item.rows, item.cols)}

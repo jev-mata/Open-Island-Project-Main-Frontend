@@ -6,13 +6,16 @@ import { Theme, useTheme } from '@mui/material/styles';
 import DestinationProfile from './profile/DestinationProfile';
 import PhotosDestinationProfile from './profile/PhotosDestinationProfile';
 import FavorateDestinationList from './profile/FavorateDestinationList';
-import { SyntheticEvent, useState } from 'react';
-import { DestinationCol } from '../type';
+import { SyntheticEvent, useEffect, useState } from 'react';
+import { DestinationCol, Favorate, ProfileType, TagsDestination, UserIslands } from '../type';
 import { Button, IconButton, ImageList, Menu, MenuItem, useMediaQuery } from '@mui/material';
 import AboutProfile from './profile/AboutProfile';
 import PostDestinationProfile from './profile/PostDestinationProfile';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Fade from '@mui/material/Fade';
+import { UserPost } from "@/app/type";
+import Cookies from "js-cookie";
+import Axios_Open from '../lib/Axios_Open';
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
@@ -47,101 +50,14 @@ function a11yProps(index: number) {
     };
 }
 
-export default function ProfileMiniTab() {
+export default function ProfileMiniTab({ profile, islands, Tags, posts, favorate }: { profile: ProfileType | null | undefined; islands: UserIslands[]; Tags: TagsDestination[], posts: UserPost[], favorate: Favorate[] }) {
     const theme = useTheme();
-    const [value, setValue] = useState(0);
+    const [value, setValue] = useState<number>(0);
+    const [isEdit, setEdit] = useState<boolean>(false);
 
     const handleChange = (event: SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
-    const [itemData, setItemData] = useState<DestinationCol[]>([
-        {
-            thumbnail: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-            name: 'Breakfast',
-            description: 'Breakfast',
-            rows: 1,
-            cols: 1,
-        },
-        {
-            thumbnail: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-            name: 'Burger',
-            rows: 2,
-            cols: 2,
-        },
-        {
-            thumbnail: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-            name: 'Camera',
-        },
-        {
-            thumbnail: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-            name: 'Coffee',
-            rows: 1,
-            cols: 1,
-        },
-        {
-            thumbnail: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-            name: 'Hats',
-            cols: 1,
-        },
-        {
-            thumbnail: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-            name: 'Honey',
-            author: '@arwinneil',
-            rows: 2,
-            cols: 2,
-        },
-        {
-            thumbnail: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-            name: 'Basketball',
-        },
-        {
-            thumbnail: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-            name: 'Fern',
-        },
-        {
-            thumbnail: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-            name: 'Mushrooms',
-            rows: 2,
-            cols: 2,
-        },
-        {
-            thumbnail: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-            name: 'Tomato basil',
-        },
-        {
-            thumbnail: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-            name: 'Sea star',
-        },
-        {
-            thumbnail: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-            name: 'Bike',
-            cols: 1,
-        },
-        {
-            thumbnail: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-            name: 'Bike',
-            cols: 2,
-            rows: 2,
-        },
-        {
-            thumbnail: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-            name: 'Bike',
-            cols: 1,
-            rows: 1,
-        },
-        {
-            thumbnail: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-            name: 'Bike',
-            cols: 1,
-            rows: 1,
-        },
-        {
-            thumbnail: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-            name: 'Bike',
-            cols: 1,
-            rows: 1,
-        },
-    ]);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const isMobileWidth = useMediaQuery("(max-width:700px)");
@@ -153,6 +69,11 @@ export default function ProfileMiniTab() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const editProfile = () => {
+        setValue(4);
+        setEdit(true);
+    }
     return (
         <Box sx={{ width: '100%', bgcolor: theme.palette.white.main, }}>
             <Box sx={{
@@ -197,7 +118,7 @@ export default function ProfileMiniTab() {
                             aria-controls={open ? 'fade-menu' : undefined}
                             aria-haspopup="true"
                             aria-expanded={open ? 'true' : undefined}
-
+                            onClick={editProfile}
                         >
                             Edit Profile
                         </Button>
@@ -226,7 +147,7 @@ export default function ProfileMiniTab() {
                     >
                         {isMobileWidth &&
 
-                            <MenuItem onClick={handleClose}>Edit Profile</MenuItem>
+                            <MenuItem onClick={editProfile}>Edit Profile</MenuItem>
                         }
                         <MenuItem onClick={handleClose}>Create New Island</MenuItem>
                         <MenuItem onClick={handleClose}>Upload 360 Photo</MenuItem>
@@ -235,14 +156,14 @@ export default function ProfileMiniTab() {
                 </Box>
             </Box>
             <CustomTabPanel isMobileWidth={isMobileWidth} value={value} index={0} theme={theme}>
-                <DestinationProfile></DestinationProfile>
+                <DestinationProfile islands={islands} Tags={Tags}></DestinationProfile>
             </CustomTabPanel>
             <CustomTabPanel isMobileWidth={isMobileWidth} value={value} index={1} theme={theme}>
-                <PhotosDestinationProfile></PhotosDestinationProfile>
+                <PhotosDestinationProfile posts={posts} ></PhotosDestinationProfile>
             </CustomTabPanel>
             <CustomTabPanel isMobileWidth={isMobileWidth} value={value} index={2} theme={theme}>
                 {/* <DestinationProfile></DestinationProfile> */}
-                <PostDestinationProfile></PostDestinationProfile>
+                <PostDestinationProfile posts={posts}></PostDestinationProfile>
             </CustomTabPanel>
             <CustomTabPanel isMobileWidth={isMobileWidth} value={value} index={3} theme={theme}>
                 {/* <DestinationProfile></DestinationProfile> */}
@@ -252,7 +173,7 @@ export default function ProfileMiniTab() {
                     variant="quilted"
                     cols={4}
                 >
-                    {itemData.map((item, index) => {
+                    {favorate.map((item, index) => {
                         return (
 
                             <FavorateDestinationList key={index} index={index} item={item} isDestLoaded={isDestLoaded}></FavorateDestinationList>
@@ -263,7 +184,7 @@ export default function ProfileMiniTab() {
             </CustomTabPanel>
             <CustomTabPanel isMobileWidth={isMobileWidth} value={value} index={4} theme={theme}>
                 {/* <DestinationProfile></DestinationProfile> */}
-                <AboutProfile></AboutProfile>
+                <AboutProfile profile={profile}></AboutProfile>
             </CustomTabPanel>
         </Box>
     );

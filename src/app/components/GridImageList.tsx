@@ -3,7 +3,7 @@ import ImageList from '@mui/material/ImageList';
 import { DestinationCol } from '../type';
 import CardImageDestination from './CardImageDestination';
 
-export default function GridImageList({ itemData, isDestLoaded }: { itemData: DestinationCol[], isDestLoaded: boolean }) {
+export default function GridImageList({ itemData, isDestLoaded, OnSaveFavorate }: { itemData: DestinationCol[], isDestLoaded: boolean, OnSaveFavorate: (id: number) => void }) {
 
     return (
         <ImageList
@@ -14,7 +14,7 @@ export default function GridImageList({ itemData, isDestLoaded }: { itemData: De
             {itemData.map((item, index) => {
                 return (
 
-                    <CardImageDestination key={index} index={index} item={item} isDestLoaded={isDestLoaded}></CardImageDestination>
+                    <CardImageDestination OnSaveFavorate={OnSaveFavorate} key={index} index={index} item={item} isDestLoaded={isDestLoaded}></CardImageDestination>
                 );
             })
             }

@@ -5,36 +5,29 @@ import ImageListItem from '@mui/material/ImageListItem';
 import { Box, IconButton, ImageListItemBar, Typography, useMediaQuery, useTheme, } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { DestinationCol } from '../../type';
+import { DestinationCol, Favorate } from '../../type';
 import { useState } from 'react';
-export default function FavorateDestinationList({ index, item, isDestLoaded }: { item: DestinationCol, index: number, isDestLoaded: boolean }) {
-    const theme = useTheme();
-    const [selectedItems, setSelectedItems] = useState<{ [key: string]: boolean }>({});
+export default function FavorateDestinationList({ index, item, isDestLoaded }: { item: Favorate, index: number, isDestLoaded: boolean }) {
+    const theme = useTheme(); 
 
-    const toggleSelection = (key: string) => {
-        setSelectedItems(prevState => ({
-            ...prevState,
-            [key]: !prevState[key]
-        }));
-    };
-
+   
     const isMobileWidth = useMediaQuery("(max-width:600px)");
     const isTabWidth = useMediaQuery("(max-width:1100px)");
     const borderRadius = isMobileWidth ? 5 : 25;
     const [onHover, setHover] = useState<boolean>(false);
     return (
 
-        <ImageListItem key={index} cols={item.cols || 1} rows={item.rows || 1}
+        <ImageListItem key={index} cols={item ? item.cols : 1} rows={item ? item.rows : 1}
             sx={{
-                minHeight: isDestLoaded ? 'none' : isMobileWidth ? 'none' : isTabWidth ? 'none' : (300 * (item.rows ? item.rows : 1)),
+                minHeight: isDestLoaded ? 'none' : isMobileWidth ? 'none' : isTabWidth ? 'none' : (300 * (item ? item.rows ? item.rows : 1 : 1)),
                 cursor: 'pointer',
             }}
-            onClick={(event) => { event.stopPropagation(); toggleSelection(item.thumbnail); }}
+            onClick={(event) => { event.stopPropagation();  }}
 
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
         >
-            <ImageCustom item={item} borderRadius={borderRadius} isHover={!onHover && !selectedItems[item.thumbnail]}></ImageCustom>
+            <ImageCustom item={item.destination ? item.destination : null} borderRadius={borderRadius} isHover={!onHover }></ImageCustom>
 
 
 
@@ -51,18 +44,18 @@ export default function FavorateDestinationList({ index, item, isDestLoaded }: {
                 actionIcon={
                     <IconButton
                         sx={{ color: 'white' }}
-                        aria-label={`star ${item.name}`}
+                        aria-label={`star ${item.destination?.name}`}
                         style={{
                             padding: 0,
                             marginRight: isMobileWidth ? 3 : 15, marginTop: isMobileWidth ? -20 : 15
                         }}
-                        onClick={(event) => { event.stopPropagation(); toggleSelection(item.thumbnail); }}
+                        onClick={(event) => { event.stopPropagation(); }}
                     >
-                        {!selectedItems[item.thumbnail] ? (
+                        {/* {!selectedItems[item.destination?.thumbnail || ''] ? ( */}
                             <FavoriteIcon sx={{ color: theme.palette.white_text.main, fontSize: isMobileWidth ? 'large' : 'xx-large' }} />
-                        ) : (
-                            <FavoriteBorderIcon sx={{ color: theme.palette.white_text.main, fontSize: isMobileWidth ? 'large' : 'xx-large' }} />
-                        )}
+                         {/* ) : ( */}
+                            {/* <FavoriteBorderIcon sx={{ color: theme.palette.white_text.main, fontSize: isMobileWidth ? 'large' : 'xx-large' }} /> */}
+                        {/* )} */}
 
                     </IconButton>
                 }
@@ -79,7 +72,7 @@ export default function FavorateDestinationList({ index, item, isDestLoaded }: {
                             // textOverflow: 'ellipsis',
                             color: 'white', // Ensure readability
                         }}>
-                            {item.name}
+                            {item.destination?.name}
                         </Typography>}
 
                     sx={{
@@ -105,7 +98,7 @@ export default function FavorateDestinationList({ index, item, isDestLoaded }: {
                             WebkitLineClamp: 4, // Set max lines to 4
                             color: 'white', // Ensure readability
                         }}>
-                            {item.description}
+                            {item.destination?.description}
                         </Typography>
                     }
 

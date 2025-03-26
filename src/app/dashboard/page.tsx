@@ -5,11 +5,12 @@ import { createTheme, PaletteMode, ThemeProvider } from '@mui/material/styles';
 import HeaderMenu from '../components/HeaderMenu';
 import { Chip, CssBaseline, Divider, useMediaQuery } from '@mui/material';
 import Axios_Open from '../lib/Axios_Open';
-import { DestinationCol, UserData } from '../type';
+import { DestinationCol, Favorate, UserData, UserPost } from '../type';
 import { useRouter } from 'next/navigation';
 import GridImageList from '../components/GridImageList';
 import { getCsrfToken } from '../fetch/api_fetch';
 import Footer from '../components/Footer';
+import Cookies from "js-cookie";
 declare module "@mui/material/styles" {
     interface Palette {
         header: Palette["primary"];
@@ -204,31 +205,6 @@ export default function PrimarySearchAppBar() {
         getCsrfToken();
     }, [getCsrfToken]);
 
-    // useEffect(() => {
-
-
-    //     const fetchDestinations = async () => {
-    //         setLoaded(false);
-    //         try {
-    //             const response = await Axios_Open.get('/api/destinations/recommendation');
-    //             const data = response.data as DestinationCol[];
-    //             setDestinationItem((prevItems) =>
-    //                 data.map((dest, index) => ({
-    //                     thumbnail: dest.thumbnail,
-    //                     name: dest.name,
-    //                     rows: prevItems[index]?.rows ?? 1, // Preserve existing rows, default to 1
-    //                     cols: prevItems[index]?.cols ?? 1, // Preserve existing cols, default to 1
-    //                 }))
-    //             );
-    //             setLoaded(true);
-    //         } catch (error) {
-    //             setLoaded(false);
-    //             console.error('Error fetching destinations:', error);
-    //             return [];
-    //         }
-    //     };
-    //     fetchDestinations();
-    // }, []);
 
     const [categories, setActive] = useState<{ name: string; isActive: boolean }[]>(
         [
@@ -292,6 +268,7 @@ export default function PrimarySearchAppBar() {
                 const data = response.data as DestinationCol[];
                 setDestinationItem((prevItems) =>
                     data.map((dest, index) => ({
+                        id: dest.id,
                         thumbnail: dest.thumbnail,
                         name: dest.name,
                         description: dest.description,
@@ -309,12 +286,37 @@ export default function PrimarySearchAppBar() {
 
     const isMobileWidth = useMediaQuery("(max-width:700px)");
     const isTabWidth = useMediaQuery("(max-width:1100px)");
+
+    const OnSaveFavorate = async (id: number) => {
+        try {
+            const allCookies = Cookies.get();
+            const response = await Axios_Open.post('/api/store/user/favorate', {
+                destination_id: id, // Send selected categories to the backend 
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-XSRF-TOKEN': allCookies['XSRF-TOKEN'],
+                    'CSRF-TOKEN': allCookies['XSRF-TOKEN'],
+                },
+                withCredentials: true,
+            },
+
+            );
+            const data = response.data.result;
+            setLoaded(true);
+        } catch (error) {
+            console.error("Error fetching destinations:", error);
+        }
+    }
+
+
     return (
 
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <HeaderMenu></HeaderMenu>
-            <Box sx={{ width: '100%', m: 0, bgcolor: theme.palette.white.main,position:'absolute'}}>
+            <Box sx={{ width: '100%', m: 0, bgcolor: theme.palette.white.main, position: 'absolute' }}>
                 <Box sx={{ pt: 15, width: isMobileWidth ? '100%' : isTabWidth ? '100%' : '80%', mx: 'auto', my: 0 }}>
                     <Box>
                         {categories.map((val) => {
@@ -351,7 +353,7 @@ export default function PrimarySearchAppBar() {
                         )}
                     </Box>
                     <Box>
-                        <GridImageList itemData={itemDestination} isDestLoaded={isDestLoaded}></GridImageList>
+                        <GridImageList OnSaveFavorate={OnSaveFavorate} itemData={itemDestination} isDestLoaded={isDestLoaded}></GridImageList>
                     </Box>
                     <Box sx={{
                         pb: 5,

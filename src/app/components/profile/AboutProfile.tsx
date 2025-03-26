@@ -1,5 +1,5 @@
 
-import { Grid2, List, ListItem, Rating, styled, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Grid2, List, ListItem, Rating, Skeleton, styled, Typography, useMediaQuery, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
@@ -7,9 +7,10 @@ import Image from 'next/image';
 import { useState } from 'react';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { ProfileType } from '@/app/type';
 
 
-export default function AboutProfile() {
+export default function AboutProfile({ profile }: { profile: ProfileType | null | undefined }) {
     const theme = useTheme();
 
     const isMobileWidth = useMediaQuery("(max-width:600px)");
@@ -33,7 +34,16 @@ export default function AboutProfile() {
                     About
                 </Typography>
                 <Typography textAlign={'left'}>
-                    Hey, I’m Anna! Just a wanderluster trying to see as much of the world as I can—one plane ticket at a time. ✈️🌍 Whether it’s eating my weight in street food, chasing sunsets, or getting lost in new cities, I’m all about making memories and living for those ‘wow’ moments. Follow my adventures for travel inspo, tips, and the occasional
+                    {profile ?
+                        profile?.bio
+                        :
+
+                        <Skeleton animation='wave' variant="text" sx={{
+                            width: isMobileWidth ? '80%' : '60%',
+                            mx: 'auto',
+                            bgcolor: theme.palette.grey[400],
+                        }}  ></Skeleton>
+                    }
                 </Typography>
             </Box>
 

@@ -7,7 +7,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { DestinationCol } from '../type';
 import { useState } from 'react';
-export default function CardImageDestination({ index, item, isDestLoaded }: { item: DestinationCol, index: number, isDestLoaded: boolean }) {
+export default function CardImageDestination({ index, item, isDestLoaded, OnSaveFavorate }: { item: DestinationCol, index: number, isDestLoaded: boolean, OnSaveFavorate: (id: number) => void }) {
     const theme = useTheme();
     const [selectedItems, setSelectedItems] = useState<{ [key: string]: boolean }>({});
 
@@ -24,9 +24,9 @@ export default function CardImageDestination({ index, item, isDestLoaded }: { it
         <ImageListItem key={index} cols={item.cols || 1} rows={item.rows || 1}
             sx={{
                 minHeight: isDestLoaded ? 'none' : (300 * (item.rows ? item.rows : 1)),
-                cursor:'pointer',
+                cursor: 'pointer',
             }}
-            onClick={(event) => { event.stopPropagation(); toggleSelection(item.thumbnail); }}
+            onClick={(event) => { event.stopPropagation(); toggleSelection(item.thumbnail); item.id && OnSaveFavorate(item.id) }}
 
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
@@ -90,13 +90,13 @@ export default function CardImageDestination({ index, item, isDestLoaded }: { it
             {isDestLoaded && onHover || selectedItems[item.thumbnail] ?
                 <ImageListItemBar
                     subtitle={
-                        <Typography fontSize={'small'} fontWeight={'normal'} style={{ 
+                        <Typography fontSize={'small'} fontWeight={'normal'} style={{
                             display: '-webkit-box',
                             WebkitBoxOrient: 'vertical',
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
-                            width:'100%',
-                            textAlign:'left',
+                            width: '100%',
+                            textAlign: 'left',
                             whiteSpace: 'normal', // Ensure text wraps
                             wordBreak: 'break-word', // Break long words properly 
                             WebkitLineClamp: 4, // Set max lines to 4
@@ -110,7 +110,7 @@ export default function CardImageDestination({ index, item, isDestLoaded }: { it
                         borderBottomLeftRadius: borderRadius, borderBottomRightRadius: borderRadius,
 
                         background:
-                            'linear-gradient(to bottom, rgba(0,0,0,0.0) 0%,  rgba(0,0,0,0.8) 100%)', 
+                            'linear-gradient(to bottom, rgba(0,0,0,0.0) 0%,  rgba(0,0,0,0.8) 100%)',
                     }}
 
                 />
