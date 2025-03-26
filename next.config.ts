@@ -5,10 +5,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   images: {
     domains: ['images.unsplash.com', 's3-bucket-open-island.s3.ap-southeast-1.amazonaws.com'],
-  }, 
-  plugins: {
-    "@tailwindcss/postcss": {},
-  },
+  },  
 };
 
 export default nextConfig;
